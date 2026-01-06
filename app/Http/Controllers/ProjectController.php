@@ -74,7 +74,13 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        $project->load(['account', 'currency']);
+        return response()->json([
+            'success' => true,
+            "data" => [
+                'project' => $project
+            ]
+        ]);
     }
 
     /**
@@ -82,7 +88,16 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $data = $request->validate([
+            'name' => 'required',
+            'account_id' => 'required|exists:accounts,id',
+            'currency_id' => 'required|exists:currencies,id',
+            'amount' => 'nullable|numeric',
+            'started_at' => 'required|date',
+        ]);
+
+        $project->update($data);
+        return response()->json(['success' => true, 'message' => 'Project updated.', 'project' => $project]);
     }
 
     /**
@@ -90,6 +105,11 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Project deleted successfully',
+            'project' => $project,
+        ]);
     }
 }

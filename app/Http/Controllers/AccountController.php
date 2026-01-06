@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Models\Currency;
 use App\Models\Project;
+use App\Models\Receipt;
 use Illuminate\Http\Request;
 
 class AccountController extends Controller
@@ -100,11 +101,11 @@ class AccountController extends Controller
             foreach ($projects as $j => $project) {
                 $projectCount += 1;
 
-                // $receipts = Receipt::from('receipts as r')
-                //     ->select('r.id', 'r.project_id', 'r.original_amount', 'r.amount')
-                //     // ->leftJoin('projects as p', 'p.id', '=', 'r.project_id')
-                //     ->where('project_id', $project->id)
-                //     ->get();
+                $receipts = Receipt::from('receipts as r')
+                    ->select('r.id', 'r.project_id', 'r.original_amount', 'r.amount')
+                    // ->leftJoin('projects as p', 'p.id', '=', 'r.project_id')
+                    ->where('project_id', $project->id)
+                    ->get();
 
                 foreach ($receipts as $k => $receipt) {
                     $totalAmount += $receipt->amount;

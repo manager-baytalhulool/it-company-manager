@@ -17,7 +17,7 @@ class MonthlyReportController extends Controller
         ->whereRaw("YEAR(`date`) = YEAR(CURDATE())")
         ->orderBy('date')
         ->get();
-        $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        // $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         foreach ($invoices as $i => $invoice) {
             if($invoice->currency_id == 1) {
                 continue;
