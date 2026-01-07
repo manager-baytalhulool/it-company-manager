@@ -23,7 +23,7 @@ class ProjectController extends Controller
                     $q->select("id", "code");
                 }
             ])
-            ->get();
+            ->paginate();
         return response()->json([
             'success' => true,
             'projects' => $projects,
@@ -74,11 +74,27 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load(['account', 'currency']);
+
+        $project->load([
+        'account:id,name,person',
+        'currency:id,name'
+    ]);
+
+        // $project->load([
+        //     'account:id,name,person',
+        //     'currency:id,name'
+        // ])->only(['id', 'name', 'account', 'currency']);
+        // $project = Project::select('id', 'name')
+        // ->with([
+        //     'account:id,name,person', 
+        //     'currency:id,name'        
+        // ])
+        // ->findOrFail($id);
+        // $project->load(['account', 'currency'])->select('id', 'name');
         return response()->json([
             'success' => true,
             "data" => [
-                'project' => $project
+                'project' => $project->only(['id', 'name', 'account', 'currency'])
             ]
         ]);
     }

@@ -14,7 +14,7 @@ class RepositoryController extends Controller
      */
     public function index()
     {
-        $repositories = Repository::all();
+        $repositories = Repository::paginate();
         return response()->json([
             'data' => $repositories
         ]);
@@ -45,6 +45,7 @@ class RepositoryController extends Controller
      */
     public function show(Repository $repository)
     {
+        $repository->load('project');
         return response()->json(['data' => $repository]);
     }
 

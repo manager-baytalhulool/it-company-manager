@@ -14,7 +14,7 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        $invoices = Invoice::with('project.account')->orderBy('created_at', 'desc')->get();
+        $invoices = Invoice::orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
         return response()->json([
             'success' => true,
             'invoices' => $invoices

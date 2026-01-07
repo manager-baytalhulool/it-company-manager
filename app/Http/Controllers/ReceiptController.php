@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\InvoiceStatus;
 use App\Models\Account;
 use App\Models\Invoice;
 use App\Models\Project;
@@ -15,7 +16,11 @@ class ReceiptController extends Controller
      */
     public function index()
     {
-        $receipts = Receipt::orderBy('date', 'desc')->with('invoice.project.account')->get();
+        $receipts = Receipt::orderBy('date', 'desc')->with([
+            'invoice:id,amount,project_id', 
+            'invoice.project:id,name,account_id', 
+            'invoice.project.account:id,name'
+        ])->paginate();
         return response()->json([
             'success' => true,
             'receipts' => $receipts
@@ -38,7 +43,7 @@ class ReceiptController extends Controller
         $receipt = Receipt::create($data);
 
         $invoice = Invoice::find($request->invoice_id);
-        $invoice->status = 'paid';
+        $invoice->status = InvoiceStatus::PAID->value;
         $invoice->save();
 
         $project = Project::find($invoice->project_id);
@@ -63,6 +68,11 @@ class ReceiptController extends Controller
      */
     public function show(Receipt $receipt)
     {
+        $receipt->load([
+            'project:id,name,account_id',
+            'invoice:id,amount',
+            'project.account:id,name'
+        ]);
         return response()->json([
             'success' => true,
             'receipt' => $receipt,
