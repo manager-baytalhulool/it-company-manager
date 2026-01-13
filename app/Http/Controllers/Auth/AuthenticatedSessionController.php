@@ -33,7 +33,10 @@ class AuthenticatedSessionController extends Controller
         $token = $user->createToken($request->device_name)->plainTextToken;
 
         return response()->json([
-            'token' => $token
+            'success' => true,
+            'data' => [
+                'token' => $token
+            ]
         ]);
     }
 
@@ -48,7 +51,7 @@ class AuthenticatedSessionController extends Controller
 
         return response()->json([
             "message" => "Logged out successfully",
-            'status' => "success"
+            'success' => true,
         ], 200);
     }
 }

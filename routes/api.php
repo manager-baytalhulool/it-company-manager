@@ -14,6 +14,7 @@ use App\Http\Controllers\MonthlyReportController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RepositoryController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -51,6 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource("projects", ProjectController::class);
     Route::apiResource('receipts', ReceiptController::class)->except(['destroy']);
     Route::apiResource('invoices', InvoiceController::class);
+
+    Route::apiResource('users', UserController::class);
 
     Route::get('backup', [BackupController::class, 'download']);
 
