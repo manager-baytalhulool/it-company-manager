@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AccountHeadController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BimonthlyReceiptController;
@@ -36,6 +37,8 @@ Route::prefix('/auth')->group(function () {
     // Route::get('/user', [UserController::class, 'show'])
     //     ->middleware('auth:sanctum');
 });
+
+Route::get('/account-heads', [AccountHeadController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/', [HomeController::class, 'index']);
