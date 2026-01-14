@@ -15,10 +15,14 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Account::orderBy('amount', 'desc')->get();
+
+        $accounts = Account::select(['id', 'name', 'person', 'amount', 'original_amount'])->orderBy('amount', 'desc')->paginate();
         return response()->json([
             'success' => true,
-            'accounts' => $accounts,
+            'message' => 'Accounts retrieved successfully',
+            'data' => [
+                'accounts' => $accounts,
+            ]
         ]);
     }
 
@@ -54,7 +58,11 @@ class AccountController extends Controller
         // $receipts = Receipt::whereIn('project_id', $projectIds)->get();
         return response()->json([
             'success' => true,
-            'account' => $account,
+            'message' => 'Account loaded successfully',
+            'data' => [
+                'account' => $account,
+
+            ]
         ]);
     }
 
@@ -86,7 +94,14 @@ class AccountController extends Controller
      */
     public function destroy(Account $account)
     {
-        //
+        $account->delete();
+        return response()->json([
+            'success' => true,
+            "message" => "Account deleted successfully.",
+            'data' => [
+                'account' => $account,
+            ]
+        ]);
     }
 
     public function recalculate()

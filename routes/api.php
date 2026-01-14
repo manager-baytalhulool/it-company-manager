@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('accounts/recalculate', [AccountController::class, 'recalculate']);
     Route::get('accounts/set-currencies', [AccountController::class, 'setCurrencies']);
-    Route::apiResource("accounts", AccountController::class)->except(["destroy"]);
+    Route::apiResource("accounts", AccountController::class);
 
     Route::apiResource('currencies', CurrencyController::class)->only(['index']);
     Route::apiResource("projects", ProjectController::class);

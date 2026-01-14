@@ -16,8 +16,12 @@ class InvoiceController extends Controller
     {
         $invoices = Invoice::orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
         return response()->json([
+
             'success' => true,
-            'invoices' => $invoices
+            'message' => 'Invoices fetched successfully',
+            'data' => [
+                'invoices' => $invoices
+            ]
         ]);
     }
 
@@ -48,13 +52,13 @@ class InvoiceController extends Controller
      * Display the specified resource.
      */
     public function show(Invoice $invoice)
-{
-    $invoice->load('project.account');
-    return response()->json([
-        'success' => true,
-        'invoice' => $invoice
-    ]);
-}
+    {
+        $invoice->load('project.account');
+        return response()->json([
+            'success' => true,
+            'invoice' => $invoice
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.

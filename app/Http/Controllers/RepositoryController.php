@@ -14,9 +14,13 @@ class RepositoryController extends Controller
      */
     public function index()
     {
-        $repositories = Repository::paginate();
+        $repositories = Repository::select(['id', 'project_id', 'name', 'url', 'provider'])->paginate();
         return response()->json([
-            'data' => $repositories
+            'success' => true,
+            'message' => 'Repositories fetched successfully',
+            'data' => [
+                'repositories' => $repositories
+            ]
         ]);
     }
 

@@ -12,7 +12,7 @@ class AccountHeadController extends Controller
      */
     public function index()
     {
-        $accountHeads = AccountHead::orderBy('created_at', 'desc')->get();
+        $accountHeads = AccountHead::orderBy('created_at', 'desc')->paginate();
         $table = 'categories';
         $model = 'category';
         return response()->json([
@@ -25,7 +25,7 @@ class AccountHeadController extends Controller
             ]
 
         ]);
-    
+
     }
 
     /**

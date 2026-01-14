@@ -26,7 +26,11 @@ class ProjectController extends Controller
             ->paginate();
         return response()->json([
             'success' => true,
-            'projects' => $projects,
+            'message' => 'Projects fetched successfully',
+            'data' => [
+                'projects' => $projects,
+
+            ]
         ]);
     }
 
@@ -76,9 +80,9 @@ class ProjectController extends Controller
     {
 
         $project->load([
-        'account:id,name,person',
-        'currency:id,name'
-    ]);
+            'account:id,name,person',
+            'currency:id,name'
+        ]);
 
         // $project->load([
         //     'account:id,name,person',
@@ -86,8 +90,8 @@ class ProjectController extends Controller
         // ])->only(['id', 'name', 'account', 'currency']);
         // $project = Project::select('id', 'name')
         // ->with([
-        //     'account:id,name,person', 
-        //     'currency:id,name'        
+        //     'account:id,name,person',
+        //     'currency:id,name'
         // ])
         // ->findOrFail($id);
         // $project->load(['account', 'currency'])->select('id', 'name');
