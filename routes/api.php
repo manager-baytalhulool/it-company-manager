@@ -50,7 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('currencies', CurrencyController::class)->only(['index']);
     Route::apiResource("projects", ProjectController::class);
-    Route::apiResource('receipts', ReceiptController::class)->except(['destroy']);
+    Route::apiResource('receipts', ReceiptController::class);
     Route::apiResource('invoices', InvoiceController::class);
 
     Route::apiResource('users', UserController::class);

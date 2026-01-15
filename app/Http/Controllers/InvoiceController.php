@@ -12,8 +12,18 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->for == 'select') {
+        $invoices = Invoice::select(['id', 'id as name'])->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Invoices fetched successfully',
+            'data' => [
+                'invoices' => $invoices,
+            ]
+        ]);
+        }
         $invoices = Invoice::orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
         return response()->json([
 
@@ -56,7 +66,10 @@ class InvoiceController extends Controller
         $invoice->load('project.account');
         return response()->json([
             'success' => true,
+            'message' => 'Invoice fetched successfully',
+            'data' => [
             'invoice' => $invoice
+            ]
         ]);
     }
 
@@ -66,6 +79,7 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $data = $request->validate([
+            'currency_id' => 'required',
             'project_id' => 'required',
             'date' => 'required',
             'due_date' => 'required',

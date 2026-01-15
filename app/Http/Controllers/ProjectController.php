@@ -12,8 +12,19 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
+    if($request->for == 'select') {
+        $projects = Project::select(['id', 'name'])->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Projects fetched successfully',
+            'data' => [
+                'projects' => $projects,
+            ]
+        ]);
+        }
         $projects = Project::orderBy('created_at', 'desc')
             ->with([
                 'account' => function ($q) {
@@ -98,7 +109,7 @@ class ProjectController extends Controller
         return response()->json([
             'success' => true,
             "data" => [
-                'project' => $project->only(['id', 'name', 'account', 'currency'])
+                'project' => $project
             ]
         ]);
     }

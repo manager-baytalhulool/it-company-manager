@@ -8,6 +8,7 @@ use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
@@ -44,13 +45,14 @@ class ReceiptController extends Controller
             'original_amount' => 'required',
             'invoice_id' => 'required',
         ]);
+        DB::beginTransaction();
         $receipt = Receipt::create($data);
 
         $invoice = Invoice::find($request->invoice_id);
         $invoice->status = InvoiceStatus::PAID->value;
         $invoice->save();
 
-        $project = Project::find($invoice->project_id);
+        $project = Project::withTrashed()->find($invoice->project_id);
         // new column for this
         // $project->original_amount += $receipt->original_amount; // original paid amount
         $project->paid += $receipt->amount;
@@ -60,10 +62,14 @@ class ReceiptController extends Controller
         $account->amount += $receipt->amount;
         $account->original_amount += $receipt->original_amount;
         $account->save();
+        DB::commit();
 
         return response()->json([
             'success' => true,
-            'receipt' => $receipt,
+            'message' => 'Receipt created successfully',
+            'data' => [
+                'receipt' => $receipt,
+            ]
         ]);
     }
 
@@ -79,7 +85,10 @@ class ReceiptController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'receipt' => $receipt,
+            'message' => 'Receipt fetched successfully',
+            'data' => [
+                'receipt' => $receipt,
+            ]
         ]);
     }
 

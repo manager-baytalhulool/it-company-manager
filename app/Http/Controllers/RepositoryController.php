@@ -50,7 +50,14 @@ class RepositoryController extends Controller
     public function show(Repository $repository)
     {
         $repository->load('project');
-        return response()->json(['data' => $repository]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Repository fetched successfully',
+
+            'data' => [
+                'repository' => $repository
+            ]
+        ]);
     }
 
     /**
@@ -58,7 +65,7 @@ class RepositoryController extends Controller
      */
     public function update(Request $request, Repository $repository)
     {
-         $data = $request->validate([
+        $data = $request->validate([
             'name' => 'required|string',
             'url' => 'required|url',
             'provider' => 'nullable|string'

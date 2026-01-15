@@ -13,9 +13,18 @@ class AccountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
+if($request->for == 'select') {
+        $accounts = Account::select(['id', 'name'])->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Accounts fetched successfully',
+            'data' => [
+                'accounts' => $accounts,
+            ]
+        ]);
+        }
         $accounts = Account::select(['id', 'name', 'person', 'amount', 'original_amount'])->orderBy('amount', 'desc')->paginate();
         return response()->json([
             'success' => true,
@@ -55,12 +64,13 @@ class AccountController extends Controller
     {
         $account->load('projects');
         $projectIds = $account->projects->pluck('id');
-        // $receipts = Receipt::whereIn('project_id', $projectIds)->get();
+        $receipts = Receipt::whereIn('project_id', $projectIds)->get();
         return response()->json([
             'success' => true,
             'message' => 'Account loaded successfully',
             'data' => [
                 'account' => $account,
+                'receipts' => $receipts,
 
             ]
         ]);
