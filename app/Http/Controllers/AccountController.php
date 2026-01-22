@@ -15,17 +15,18 @@ class AccountController extends Controller
      */
     public function index(Request $request)
     {
-if($request->for == 'select') {
-        $accounts = Account::select(['id', 'name'])->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'Accounts fetched successfully',
-            'data' => [
-                'accounts' => $accounts,
-            ]
-        ]);
+        if ($request->for == 'select') {
+            $accounts = Account::select(['id', 'name'])->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Accounts fetched successfully',
+                'data' => [
+                    'accounts' => $accounts,
+                ]
+            ]);
         }
-        $accounts = Account::select(['id', 'name', 'person', 'amount', 'original_amount'])->orderBy('amount', 'desc')->paginate();
+        $accounts = Account::select(['id', 'name', 'person', 'amount', 'original_amount', 'currency_id'])->orderBy('amount', 'desc')->paginate();
+        $accounts->load('currency');
         return response()->json([
             'success' => true,
             'message' => 'Accounts retrieved successfully',
@@ -46,7 +47,9 @@ if($request->for == 'select') {
             'phone' => 'nullable',
             'currency_id' => 'required',
             'parent_id' => 'nullable',
-            'address' => 'nullable'
+            'address' => 'nullable',
+            'longitude' => 'nullable',
+            'latitude' => 'nullable',
         ]);
 
         $account = Account::create($data);
@@ -62,7 +65,7 @@ if($request->for == 'select') {
      */
     public function show(Account $account)
     {
-        $account->load('projects');
+        $account->load('projects', 'currency');
         $projectIds = $account->projects->pluck('id');
         $receipts = Receipt::whereIn('project_id', $projectIds)->get();
         return response()->json([
@@ -87,7 +90,9 @@ if($request->for == 'select') {
             'phone' => 'nullable',
             'currency_id' => 'required',
             'parent_id' => 'nullable',
-            'address' => 'nullable'
+            'address' => 'nullable',
+            'longitude' => 'nullable',
+            'latitude' => 'nullable',
         ]);
 
         $account->update($data);

@@ -15,15 +15,15 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
 
-    if($request->for == 'select') {
-        $projects = Project::select(['id', 'name'])->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'Projects fetched successfully',
-            'data' => [
-                'projects' => $projects,
-            ]
-        ]);
+        if ($request->for == 'select') {
+            $projects = Project::select(['id', 'name'])->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Projects fetched successfully',
+                'data' => [
+                    'projects' => $projects,
+                ]
+            ]);
         }
         $projects = Project::orderBy('created_at', 'desc')
             ->with([
@@ -92,7 +92,7 @@ class ProjectController extends Controller
 
         $project->load([
             'account:id,name,person',
-            'currency:id,name'
+            'currency:id,code'
         ]);
 
         // $project->load([

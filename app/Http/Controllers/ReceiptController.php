@@ -18,10 +18,15 @@ class ReceiptController extends Controller
     public function index()
     {
         $receipts = Receipt::orderBy('date', 'desc')->with([
+            'project:id,name,account_id,currency_id',
+            'project.currency:id,code',
+            'project.account:id,name',
             'invoice:id,amount,project_id',
             'invoice.project:id,name,account_id',
             'invoice.project.account:id,name'
         ])->paginate();
+
+
         return response()->json([
 
             'success' => true,
