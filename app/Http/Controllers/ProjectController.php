@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProjectsExport;
 use App\Models\Account;
+use App\Models\Currency;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 
 class ProjectController extends Controller
 {
@@ -142,5 +147,69 @@ class ProjectController extends Controller
             'message' => 'Project deleted successfully',
             'project' => $project,
         ]);
+    }
+
+    public function sync(): JsonResponse
+    {
+        $ignoreableIds = [1, 2, 19, 20, 27, 28, 29, 34, 35];
+        $oldProjects = DB::connection('mysql_old')
+            ->table('projects')
+            ->get();
+
+        foreach ($oldProjects as $oldProject) {
+            if (in_array($oldProject->id, $ignoreableIds)) {
+                continue;
+            }
+
+            // Check if project already exists
+            $existingProject = Project::where("name", $oldProject->name)->first();
+            if ($existingProject) {
+                continue; // Skip existing projects
+            }
+
+            $oldProjectAccountId = $oldProject->account_id;
+            if ($oldProjectAccountId == 19) {
+                $oldProjectAccountId = 17;
+            }
+
+            $oldAccount = DB::connection('mysql_old')
+                ->table('accounts')
+                ->where('id', $oldProjectAccountId)
+                ->first();
+
+
+
+            $account = Account::where('name', $oldAccount->name)->first();
+            $currency = Currency::where('code', $oldAccount->currency)->first();
+
+            // Migrate project
+            Project::create([
+                'account_id' => $account->id,
+                'currency_id' => $currency->id,
+                'name' => $oldProject->name,
+                'amount' => $oldProject->amount,
+                'original_amount' => $oldProject->original_amount,
+                'paid' => $oldProject->paid,
+                'is_available' => false,
+                'is_duplicable' => false,
+                'is_sellable' => false,
+                'live_url' => "",
+                'demo_url' => "",
+                'started_at' => $oldProject->created_at,
+                'is_live' => false,
+                'created_at' => $oldProject->created_at,
+                'updated_at' => $oldProject->updated_at,
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Project synced successfully'
+        ]);
+    }
+
+    public function export()
+    {
+        return FacadesExcel::download(new ProjectsExport, 'projects.csv', Excel::CSV);
     }
 }

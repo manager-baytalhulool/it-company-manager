@@ -6,7 +6,9 @@ use App\Models\Account;
 use App\Models\Currency;
 use App\Models\Project;
 use App\Models\Receipt;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -160,5 +162,36 @@ class AccountController extends Controller
             $account->currency_id = $currency->id;
             $account->save();
         }
+    }
+
+    public function sync(): JsonResponse
+    {
+        $ignoreableIds = [19];
+        $oldAccounts = DB::connection('mysql_old')->table('accounts')->get();
+        foreach ($oldAccounts as $oldAccount) {
+            $existingAccount = Account::where('id', $oldAccount->id)->first();
+            if ($existingAccount) {
+                continue;
+            }
+            if (in_array($oldAccount->id, $ignoreableIds)) {
+                continue;
+            }
+            Account::create([
+                'name' => $oldAccount->name,
+                'person' => $oldAccount->person,
+                'phone' => $oldAccount->phone,
+                'currency_id' => $oldAccount->currency_id,
+                'parent_id' => $oldAccount->parent_id,
+                'address' => $oldAccount->address,
+                'latitude' => $oldAccount->latitude,
+                'longitude' => $oldAccount->longitude,
+                'created_at' => $oldAccount->created_at,
+                'updated_at' => $oldAccount->updated_at,
+            ]);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Accounts synced successfully'
+        ]);
     }
 }

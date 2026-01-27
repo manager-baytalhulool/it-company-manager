@@ -46,10 +46,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('accounts/recalculate', [AccountController::class, 'recalculate']);
     Route::get('accounts/set-currencies', [AccountController::class, 'setCurrencies']);
+    Route::post('accounts/sync', [AccountController::class, 'sync']);
     Route::apiResource("accounts", AccountController::class);
 
     Route::apiResource('currencies', CurrencyController::class)->only(['index']);
+
+    Route::post('projects/sync', [ProjectController::class, 'sync']);
+    Route::post('projects/export', [ProjectController::class, 'export']);
     Route::apiResource("projects", ProjectController::class);
+
     Route::apiResource('receipts', ReceiptController::class);
     Route::apiResource('invoices', InvoiceController::class);
 
