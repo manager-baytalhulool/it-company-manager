@@ -24,7 +24,7 @@ class HomeController extends Controller
         $pendingIncome = 0;
         $pendingInvoices = Invoice::where('status', 'pending')->get();
         foreach ($pendingInvoices as $i => $pendingInvoice) {
-            if($pendingInvoice->currency_id == 1) {
+            if ($pendingInvoice->currency_id == 1) {
                 $pendingIncome += $pendingInvoice->amount;
             } else {
                 $pendingIncome += $pendingInvoice->currency->value * $pendingInvoice->amount;
@@ -35,18 +35,18 @@ class HomeController extends Controller
         $projectsCount = Project::count();
 
         $monthlyReceipts = Receipt::select(DB::raw("DATE_FORMAT(date, '%b') as month"), DB::raw("SUM(amount) as value"))
-        ->where(DB::raw("YEAR (date)"), DB::raw("Year(CURDATE())"))
-        ->groupBy(DB::raw("month"))
-        ->get();
+            ->where(DB::raw("YEAR (date)"), DB::raw("Year(CURDATE())"))
+            ->groupBy(DB::raw("month"))
+            ->get();
         $monthlyReceipts = $monthlyReceipts->pluck('value', 'month');
 
         $monthlyInvoices = Invoice::select('currency_id', 'id', 'date', 'amount', 'status', DB::raw('DATE_FORMAT(`date`, "%b") as month'))->with('currency', 'receipts')->orderBy('date')->get();
         $months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         foreach ($monthlyInvoices as $i => $invoice) {
-            if($invoice->currency_id == 1) {
+            if ($invoice->currency_id == 1) {
                 continue;
             }
-            if($invoice->status == 'paid') {
+            if ($invoice->status == 'paid') {
                 $monthlyInvoices[$i]->amount = $invoice->receipts->sum('amount');
             } else {
                 $monthlyInvoices[$i]->amount = $invoice->currency->value * $invoice->amount;
@@ -60,9 +60,9 @@ class HomeController extends Controller
             ];
         });
 
-        $accounts= Account::select('name', 'amount', 'address', 'latitude', 'longitude')->where('amount', '>', 0)
-        ->orderBy('amount', 'desc')
-        ->get();
+        $accounts = Account::select('name', 'amount', 'address', 'latitude', 'longitude')->where('amount', '>', 0)
+            ->orderBy('amount', 'desc')
+            ->get();
         $markers = $accounts;
         $accounts = $accounts->pluck('amount', 'name');
 
@@ -70,14 +70,17 @@ class HomeController extends Controller
 
         return response()->json([
             'success' => true,
-            'clientsCount' => $clientsCount,
-            'pendingIncome' => $pendingIncome,
-            'pendingInvoicesCount' => $pendingInvoicesCount, 'projectsCount' => $projectsCount,
-            'monthlyReceipts' => $monthlyReceipts,
-            'monthlySales' => $monthlySales,
-            'accounts' => $accounts,
-            'markers' => $markers,
-            'invoices' => $invoices
+            'data' => [
+                'clientsCount' => $clientsCount,
+                'pendingIncome' => $pendingIncome,
+                'pendingInvoicesCount' => $pendingInvoicesCount,
+                'projectsCount' => $projectsCount,
+                'monthlyReceipts' => $monthlyReceipts,
+                'monthlySales' => $monthlySales,
+                'accounts' => $accounts,
+                'markers' => $markers,
+                'invoices' => $invoices
+            ]
         ]);
     }
 

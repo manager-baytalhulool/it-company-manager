@@ -42,7 +42,7 @@ Route::prefix('/auth')->group(function () {
 Route::get('/account-heads', [AccountHeadController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/', [HomeController::class, 'index']);
+    Route::get('/dashboard', [HomeController::class, 'index']);
 
     Route::get('accounts/recalculate', [AccountController::class, 'recalculate']);
     Route::get('accounts/set-currencies', [AccountController::class, 'setCurrencies']);
@@ -58,9 +58,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('backup', [BackupController::class, 'download']);
 
     Route::prefix('reports')->group(function () {
-        Route::get('/monthly', [MonthlyReportController::class, 'index']);
+        Route::get('/monthly-sales', [MonthlyReportController::class, 'index']);
         Route::get('/monthly-receipts', [MonthlyReceiptController::class, 'index']);
-        Route::get('/bi-monthly', [BimonthlyReportController::class, 'index']);
+        Route::get('/bi-monthly-sales', [BimonthlyReportController::class, 'index']);
         Route::get('/bi-monthly-receipts', [BimonthlyReceiptController::class, 'index']);
     });
 

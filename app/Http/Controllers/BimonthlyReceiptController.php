@@ -14,20 +14,20 @@ class BimonthlyReceiptController extends Controller
     public function index()
     {
         $monthlyReceipts = Receipt::select(DB::raw("DATE_FORMAT(date, '%b') as month"), DB::raw("SUM(amount) as amount"))
-        ->where(DB::raw("YEAR (date)"), DB::raw("Year(CURDATE())"))
-        ->orderBy('date')
-        ->groupBy(DB::raw("month"))
-        ->get();
+            ->where(DB::raw("YEAR (date)"), DB::raw("Year(CURDATE())"))
+            ->orderBy(DB::raw("month"))
+            ->groupBy(DB::raw("month"))
+            ->get();
         $bimonthlyReceipts = [];
         foreach ($monthlyReceipts as $i => $monthlyReceipt) {
             $j = $i + 1;
-            if($j % 2) {
+            if ($j % 2) {
 
-                $bimonthlyReceipts[$i]['label'] = $monthlyReceipt->month. ' - ';
+                $bimonthlyReceipts[$i]['label'] = $monthlyReceipt->month . ' - ';
                 $bimonthlyReceipts[$i]['amount'] = $monthlyReceipt->amount;
             } else {
-                $bimonthlyReceipts[$i-1]['label'] = $bimonthlyReceipts[$i-1]['label'].$monthlyReceipt->month;
-                $bimonthlyReceipts[$i-1]['amount'] += $monthlyReceipt->amount;
+                $bimonthlyReceipts[$i - 1]['label'] = $bimonthlyReceipts[$i - 1]['label'] . $monthlyReceipt->month;
+                $bimonthlyReceipts[$i - 1]['amount'] += $monthlyReceipt->amount;
             }
         }
 
