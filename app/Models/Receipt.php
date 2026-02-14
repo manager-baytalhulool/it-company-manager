@@ -29,7 +29,6 @@ class Receipt extends Model
                 $q->where('receipts.description', 'like', "%{$searchTerm}%")
                     ->orWhere('projects.name', 'like', "%{$searchTerm}%")
                     ->orWhere('accounts.name', 'like', "%{$searchTerm}%");
-            })
-            ->select('receipts.*');
+            });
     }
 }

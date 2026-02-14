@@ -27,10 +27,9 @@ class Project extends Model
     {
         if (empty($searchTerm)) return;
         $query
-            ->join('accounts', 'projects.account_id', '=', 'accounts.id')
+            ->leftJoin('accounts', 'projects.account_id', '=', 'accounts.id')
             ->where('projects.name', 'like', "%{$searchTerm}%")
             ->orWhere('projects.live_url', 'like', "%{$searchTerm}%")
-            ->orWhere('accounts.name', 'like', "%{$searchTerm}%")
-            ->select('projects.*'); // Important: Sirf projects ka data lane ke liye
+            ->orWhere('accounts.name', 'like', "%{$searchTerm}%");
     }
 }

@@ -25,6 +25,6 @@ class Repository extends Model
             ->where('repositories.name', 'like', "%{$searchTerm}%")
             ->orWhere('repositories.url', 'like', "%{$searchTerm}%")
             ->orWhere('repositories.provider', 'like', "%{$searchTerm}%")
-            ->orWhere('projects.name', 'like', "%{$searchTerm}%"); // Important: Sirf repositories ka data lane ke liye
+            ->orWhere('projects.name', 'like', "%{$searchTerm}%");
     }
 }
