@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,5 +21,16 @@ class Project extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function scopeSearch(Builder $query, string|null $searchTerm): void
+    {
+        if (empty($searchTerm)) return;
+        $query
+            ->join('accounts', 'projects.account_id', '=', 'accounts.id')
+            ->where('projects.name', 'like', "%{$searchTerm}%")
+            ->orWhere('projects.live_url', 'like', "%{$searchTerm}%")
+            ->orWhere('accounts.name', 'like', "%{$searchTerm}%")
+            ->select('projects.*'); // Important: Sirf projects ka data lane ke liye
     }
 }

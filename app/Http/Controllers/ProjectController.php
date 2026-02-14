@@ -30,7 +30,7 @@ class ProjectController extends Controller
                 ]
             ]);
         }
-        $projects = Project::orderBy('created_at', 'desc')
+        $projects = Project::search($request->search)->orderBy('created_at', 'desc')
             ->with([
                 'account' => function ($q) {
                     $q->select('id', 'currency_id', 'name');

@@ -15,9 +15,9 @@ class ReceiptController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $receipts = Receipt::orderBy('date', 'desc')->with([
+        $receipts = Receipt::search($request->search)->orderBy('date', 'desc')->with([
             'project:id,name,account_id,currency_id',
             'project.currency:id,code',
             'project.account:id,name',

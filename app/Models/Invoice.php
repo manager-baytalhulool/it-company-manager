@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,5 +27,12 @@ class Invoice extends Model
     public function receipts()
     {
         return $this->hasMany(Receipt::class);
+    }
+
+    public function scopeSearch(Builder $query, string|null $searchTerm): void
+    {
+        if (empty($searchTerm)) return;
+        $query->where('description', 'like', "%{$searchTerm}%")
+            ->orWhere('status', 'like', "%{$searchTerm}%");
     }
 }

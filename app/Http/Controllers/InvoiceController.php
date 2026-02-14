@@ -14,17 +14,17 @@ class InvoiceController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->for == 'select') {
-        $invoices = Invoice::select(['id', 'id as name'])->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'Invoices fetched successfully',
-            'data' => [
-                'invoices' => $invoices,
-            ]
-        ]);
+        if ($request->for == 'select') {
+            $invoices = Invoice::select(['id', 'id as name'])->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoices fetched successfully',
+                'data' => [
+                    'invoices' => $invoices,
+                ]
+            ]);
         }
-        $invoices = Invoice::orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
+        $invoices = Invoice::search($request->search)->orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
         return response()->json([
 
             'success' => true,
@@ -68,7 +68,7 @@ class InvoiceController extends Controller
             'success' => true,
             'message' => 'Invoice fetched successfully',
             'data' => [
-            'invoice' => $invoice
+                'invoice' => $invoice
             ]
         ]);
     }

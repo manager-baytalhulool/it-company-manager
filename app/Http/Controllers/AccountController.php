@@ -27,7 +27,7 @@ class AccountController extends Controller
                 ]
             ]);
         }
-        $accounts = Account::select(['id', 'name', 'person', 'amount', 'original_amount', 'currency_id'])->orderBy('amount', 'desc')->paginate();
+        $accounts = Account::search($request->search)->select(['id', 'name', 'person', 'amount', 'original_amount', 'currency_id'])->orderBy('amount', 'desc')->paginate();
         $accounts->load('currency');
         return response()->json([
             'success' => true,

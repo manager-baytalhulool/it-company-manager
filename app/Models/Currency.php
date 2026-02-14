@@ -10,4 +10,9 @@ class Currency extends Model
     use SoftDeletes;
 
     protected $guarded = ["id"];
+
+    public function accounts()
+    {
+        return $this->hasMany(Account::class);
+    }
 }
