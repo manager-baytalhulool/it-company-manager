@@ -11,13 +11,13 @@ class AccountHead extends Model
 
     protected $guarded = ['id'];
 
-    public function generalEntries()
+    public function journalEntries()
     {
-        return $this->hasMany(GeneralEntry::class);
+        return $this->hasMany(JournalEntry::class);
     }
 
-    public function forGeneralEntries()
+    public function forJournalEntries()
     {
-        return $this->hasMany(GeneralEntry::class, 'for_account_head_id');
+        return $this->hasMany(JournalEntry::class, 'for_account_head_id');
     }
 }

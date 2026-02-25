@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_entries', function (Blueprint $table) {
+        Schema::create('journal_entry_serial_numbers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('serial_no');
-            $table->unsignedInteger('account_head_id');
-            $table->unsignedInteger('for_account_head_id');
-            $table->double('debit');
-            $table->double('credit');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_entries');
+        Schema::dropIfExists('journal_entry_serial_numbers');
     }
 };
