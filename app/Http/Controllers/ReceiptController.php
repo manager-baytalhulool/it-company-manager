@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\InvoiceStatus;
 use App\Models\Account;
 use App\Models\Invoice;
+use App\Models\JournalEntry;
 use App\Models\Project;
 use App\Models\Receipt;
 use Illuminate\Http\Request;
@@ -67,6 +68,10 @@ class ReceiptController extends Controller
         $account->amount += $receipt->amount;
         $account->original_amount += $receipt->original_amount;
         $account->save();
+
+        $journalEntryService = new \App\Services\JournalEntryService();
+        $journalEntryService->createJournalEntryOnReceipt($receipt);
+
         DB::commit();
 
         return response()->json([
