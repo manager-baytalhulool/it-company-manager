@@ -7,10 +7,13 @@ use App\Http\Controllers\BackupController;
 use App\Http\Controllers\BimonthlyReceiptController;
 use App\Http\Controllers\BimonthlyReportController;
 use App\Http\Controllers\CurrencyController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\MonthlyReceiptController;
 use App\Http\Controllers\MonthlyReportController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RepositoryController;
@@ -70,6 +73,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::apiResource('repositories', RepositoryController::class);
+    Route::apiResource('products', ProductController::class);
+    Route::apiResource('expenses', ExpenseController::class);
+    Route::apiResource('loans', LoanController::class);
 });
 
 Route::get('/user', function (Request $request) {
