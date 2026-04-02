@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('repositories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("project_id")->constrained();
+            $table->morphs('repositable');
             $table->string("name");
             $table->string("url", 1024);
             $table->string("provider")->default("gitlab");

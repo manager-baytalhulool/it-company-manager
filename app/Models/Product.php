@@ -20,4 +20,9 @@ class Product extends Model
             ->orWhere('demo_url', 'like', "%{$searchTerm}%")
             ->orWhere('download_url', 'like', "%{$searchTerm}%");
     }
+
+    public function repositories()
+    {
+        return $this->morphMany(Repository::class, 'repositable');
+    }
 }

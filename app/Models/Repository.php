@@ -12,19 +12,16 @@ class Repository extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function project(): BelongsTo
+    public function repositable()
     {
-        return $this->belongsTo(Project::class);
+        return $this->morphTo();
     }
 
     public function scopeSearch(Builder $query, string|null $searchTerm): void
     {
         if (empty($searchTerm)) return;
-        $query
-            ->join('projects', 'projects.id', '=', 'repositories.project_id')
-            ->where('repositories.name', 'like', "%{$searchTerm}%")
+        $query->where('repositories.name', 'like', "%{$searchTerm}%")
             ->orWhere('repositories.url', 'like', "%{$searchTerm}%")
-            ->orWhere('repositories.provider', 'like', "%{$searchTerm}%")
-            ->orWhere('projects.name', 'like', "%{$searchTerm}%");
+            ->orWhere('repositories.provider', 'like', "%{$searchTerm}%");
     }
 }

@@ -32,4 +32,10 @@ class Project extends Model
             ->orWhere('projects.live_url', 'like', "%{$searchTerm}%")
             ->orWhere('accounts.name', 'like', "%{$searchTerm}%");
     }
+
+
+    public function repositories()
+    {
+        return $this->morphMany(Repository::class, 'repositable');
+    }
 }

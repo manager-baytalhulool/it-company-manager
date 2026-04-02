@@ -14,7 +14,10 @@ class RepositoryController extends Controller
      */
     public function index(Request $request)
     {
-        $repositories = Repository::search($request->search)->select(['repositories.id', 'project_id', 'repositories.name', 'url', 'provider'])->paginate();
+        $repositories = Repository::search($request->search)
+            ->select(['repositories.id', 'repositable_id', 'repositable_type', 'repositories.name', 'url', 'provider'])
+            ->with('repositable')
+            ->paginate();
         return response()->json([
             'success' => true,
             'message' => 'Repositories fetched successfully',
@@ -30,7 +33,8 @@ class RepositoryController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'project_id' => 'required|exists:projects,id',
+            'repositable_id' => 'required|integer',
+            'repositable_type' => 'required|string|in:App\\Models\\Project,App\\Models\\Product',
             'name' => 'required|string',
             'url' => 'required|url',
             'provider' => 'nullable|string'
@@ -49,7 +53,7 @@ class RepositoryController extends Controller
      */
     public function show(Repository $repository)
     {
-        $repository->load('project');
+        $repository->load('repositable');
         return response()->json([
             'success' => true,
             'message' => 'Repository fetched successfully',
@@ -66,6 +70,8 @@ class RepositoryController extends Controller
     public function update(Request $request, Repository $repository)
     {
         $data = $request->validate([
+            'repositable_id' => 'sometimes|required|integer',
+            'repositable_type' => 'sometimes|required|string|in:App\\Models\\Project,App\\Models\\Product',
             'name' => 'required|string',
             'url' => 'required|url',
             'provider' => 'nullable|string'
