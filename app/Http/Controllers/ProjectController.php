@@ -14,6 +14,13 @@ use Maatwebsite\Excel\Facades\Excel as FacadesExcel;
 
 class ProjectController extends Controller
 {
+    public SyncService $syncService;
+
+    public function __construct(SyncService $syncService)
+    {
+        $this->syncService = $syncService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -153,56 +160,7 @@ class ProjectController extends Controller
 
     public function sync(): JsonResponse
     {
-        $ignoreableIds = [1, 2, 19, 20, 27, 28, 29, 34, 35];
-        $oldProjects = DB::connection('mysql_old')
-            ->table('projects')
-            ->get();
-
-        foreach ($oldProjects as $oldProject) {
-            if (in_array($oldProject->id, $ignoreableIds)) {
-                continue;
-            }
-
-            // Check if project already exists
-            $existingProject = Project::where("name", $oldProject->name)->first();
-            if ($existingProject) {
-                continue; // Skip existing projects
-            }
-
-            $oldProjectAccountId = $oldProject->account_id;
-            if ($oldProjectAccountId == 19) {
-                $oldProjectAccountId = 17;
-            }
-
-            $oldAccount = DB::connection('mysql_old')
-                ->table('accounts')
-                ->where('id', $oldProjectAccountId)
-                ->first();
-
-
-
-            $account = Account::where('name', $oldAccount->name)->first();
-            $currency = Currency::where('code', $oldAccount->currency)->first();
-
-            // Migrate project
-            Project::create([
-                'account_id' => $account->id,
-                'currency_id' => $currency->id,
-                'name' => $oldProject->name,
-                'amount' => $oldProject->amount,
-                'original_amount' => $oldProject->original_amount,
-                'paid' => $oldProject->paid,
-                'is_available' => false,
-                'is_duplicable' => false,
-                'is_sellable' => false,
-                'live_url' => "",
-                'demo_url' => "",
-                'started_at' => $oldProject->created_at,
-                'is_live' => false,
-                'created_at' => $oldProject->created_at,
-                'updated_at' => $oldProject->updated_at,
-            ]);
-        }
+        $this->syncService->projects();
 
         return response()->json([
             'success' => true,
