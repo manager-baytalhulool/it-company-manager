@@ -17,6 +17,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReceiptController;
 use App\Http\Controllers\RepositoryController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TechnologyController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -74,6 +76,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('repositories', RepositoryController::class);
     Route::apiResource('products', ProductController::class);
+    Route::apiResource('services', ServiceController::class);
+    Route::apiResource('technologies', TechnologyController::class);
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('loans', LoanController::class);
 });

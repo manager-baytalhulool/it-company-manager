@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -24,5 +26,15 @@ class Product extends Model
     public function repositories()
     {
         return $this->morphMany(Repository::class, 'repositable');
+    }
+
+    public function technologies(): BelongsToMany
+    {
+        return $this->belongsToMany(Technology::class);
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable');
     }
 }

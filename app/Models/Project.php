@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
@@ -37,5 +39,27 @@ class Project extends Model
     public function repositories()
     {
         return $this->morphMany(Repository::class, 'repositable');
+    }
+
+    public function services(): BelongsToMany
+    {
+        return $this->belongsToMany(Service::class);
+    }
+
+    public function images(): MorphMany
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function featuredImage()
+    {
+        return $this->morphOne(Image::class, 'imageable')
+            ->orderByDesc('is_featured')
+            ->orderBy('id');
+    }
+
+    public function technologies(): BelongsToMany
+    {
+        return $this->belongsToMany(Technology::class);
     }
 }
