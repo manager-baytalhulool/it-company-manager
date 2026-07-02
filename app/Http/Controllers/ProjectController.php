@@ -105,6 +105,7 @@ class ProjectController extends Controller
     {
 
         $project->load([
+            'receipts:id,project_id,invoice_id,description,amount,original_amount,date',
             'account:id,name,person',
             'currency:id,code'
         ]);
