@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Exports\ProjectsExport;
 use App\Models\Account;
-use App\Models\Currency;
 use App\Models\Project;
+use App\Services\SyncService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

@@ -65,6 +65,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('users', UserController::class);
 
+    Route::apiResource('backups', BackupController::class)->only(["index"]);
     Route::get('backup', [BackupController::class, 'download']);
 
     Route::prefix('reports')->group(function () {

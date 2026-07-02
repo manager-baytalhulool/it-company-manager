@@ -19,8 +19,8 @@ return new class extends Migration
             $table->unsignedInteger('currency_id');
             $table->date('date');
             $table->date('due_date');
-            $table->string('description');
-            $table->double('amount');
+            $table->text('description');
+            $table->decimal('amount');
             $table->string('status', 20)->default(InvoiceStatus::PENDING->value);
             $table->timestamps();
             $table->softDeletes();

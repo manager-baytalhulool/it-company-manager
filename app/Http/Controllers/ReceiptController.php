@@ -8,24 +8,35 @@ use App\Models\Invoice;
 use App\Models\JournalEntry;
 use App\Models\Project;
 use App\Models\Receipt;
+use App\Services\SyncService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ReceiptController extends Controller
 {
+    public SyncService $syncService;
+
+    public function __construct(SyncService $syncService)
+    {
+        $this->syncService = $syncService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $receipts = Receipt::search($request->search)->orderBy('date', 'desc')->with([
-            'project:id,name,account_id,currency_id',
-            'project.currency:id,code',
-            'project.account:id,name',
-            'invoice:id,amount,project_id',
-            'invoice.project:id,name,account_id',
-            'invoice.project.account:id,name'
-        ])->paginate();
+        $receipts = Receipt::search($request->search)
+            ->orderBy('date', 'desc')
+            ->with([
+                'project:id,name,account_id,currency_id',
+                'project.currency:id,code',
+                'project.account:id,name',
+                'invoice:id,amount,project_id',
+                'invoice.project:id,name,account_id',
+                'invoice.project.account:id,name'
+            ])->paginate();
 
 
         return response()->json([
@@ -143,6 +154,15 @@ class ReceiptController extends Controller
         return response()->json([
             'message' => 'Receipt has been deleted successfully',
             'receipt' => $receipt
+        ]);
+    }
+
+    public function sync(): JsonResponse
+    {
+        $this->syncService->receipts();
+        return response()->json([
+            'success' => true,
+            'message' => 'Receipts synced successfully'
         ]);
     }
 }

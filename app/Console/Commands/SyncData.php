@@ -32,7 +32,7 @@ class SyncData extends Command
      */
     public function handle()
     {
-        $available = ['accounts', 'projects'];
+        $available = ['accounts', 'projects', 'invoices', 'receipts'];
         $selected = $this->argument('modules');
 
         $this->sync->setCommand($this);

@@ -24,9 +24,12 @@ class InvoiceController extends Controller
                 ]
             ]);
         }
-        $invoices = Invoice::search($request->search)->orderBy('created_at', 'desc')->with(['project:id,name,account_id', 'project.account:id,name'])->paginate();
-        return response()->json([
+        $invoices = Invoice::search($request->search)->orderBy('created_at', 'desc')->with([
+            'project:id,name,account_id',
+            'project.account:id,name'
+        ])->paginate();
 
+        return response()->json([
             'success' => true,
             'message' => 'Invoices fetched successfully',
             'data' => [
@@ -63,7 +66,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        $invoice->load('project.account');
+        $invoice->load('project.account.currency');
         return response()->json([
             'success' => true,
             'message' => 'Invoice fetched successfully',
