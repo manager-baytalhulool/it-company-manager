@@ -26,7 +26,8 @@ class InvoiceController extends Controller
         }
         $invoices = Invoice::search($request->search)->orderBy('created_at', 'desc')->with([
             'project:id,name,account_id',
-            'project.account:id,name'
+            'project.account:id,name',
+            'currency:id,name,code'
         ])->paginate();
 
         return response()->json([

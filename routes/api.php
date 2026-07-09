@@ -45,6 +45,7 @@ Route::prefix('/auth')->group(function () {
 });
 
 Route::get('/account-heads', [AccountHeadController::class, 'index']);
+Route::get('/account-heads/{accountHead}', [AccountHeadController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index']);

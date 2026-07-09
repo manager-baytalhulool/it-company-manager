@@ -25,7 +25,6 @@ class AccountHeadController extends Controller
             ]
 
         ]);
-
     }
 
     /**
@@ -51,7 +50,7 @@ class AccountHeadController extends Controller
     {
         $table = 'categories';
         $model = 'category';
-        $accountHead->load('forGeneralEntries');
+        $accountHead->load('forJournalEntries');
         return response()->json([
             'success' => true,
             'message' => 'Data fetched successfully',
