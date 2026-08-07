@@ -32,6 +32,9 @@ class AccountHeadSeeder extends Seeder
             [
                 'name' => 'Account Receivable',
             ],
+            [
+                'name' => 'Expense'
+            ]
         ];
 
 

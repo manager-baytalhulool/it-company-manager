@@ -3,10 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Services\JournalEntryService;
 use Illuminate\Http\Request;
 
 class ExpenseController extends Controller
 {
+    public JournalEntryService $journalEntryService;
+
+    public function __construct(JournalEntryService $journalEntryService)
+    {
+        $this->journalEntryService = $journalEntryService;
+    }
+
 
     public function index(Request $request)
     {
@@ -28,6 +36,9 @@ class ExpenseController extends Controller
         ]);
 
         $expense = Expense::create($data);
+
+        $this->journalEntryService->createJournalEntryOnExpense($expense);
+
         return response()->json([
             'success' => true,
             "message" => "Expense created successfully.",
@@ -53,7 +64,7 @@ class ExpenseController extends Controller
             'amount' => 'required|numeric',
         ]);
 
-        $expense->update($data);
+        // $expense->update($data);
 
         return response()->json([
             'success' => true,

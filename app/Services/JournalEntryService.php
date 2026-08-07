@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\AccountHead;
+use App\Models\Expense;
 use App\Models\JournalEntry;
 use App\Models\JournalEntrySerialNumber;
 use App\Models\Receipt;
@@ -29,7 +30,35 @@ class JournalEntryService
         ]);
     }
 
-    public function createJournalEntryOnReceipt($receipt)
+    public function createJournalEntryOnExpense(Expense $expense)
+    {
+        $serialNumber = $this->getSerialNumber();
+        // $receipt->project->account_id
+
+        $this->createJournalEntry(
+            $serialNumber,
+            AccountHead::EXPENSE_ID,
+            AccountHead::CASH_ID,
+            $expense->amount,
+            0,
+            $expense->date,
+            Expense::class,
+            $expense->id
+        );
+
+        $this->createJournalEntry(
+            $serialNumber,
+            AccountHead::CASH_ID,
+            AccountHead::EXPENSE_ID,
+            0,
+            $expense->amount,
+            $expense->date,
+            Expense::class,
+            $expense->id
+        );
+    }
+
+    public function createJournalEntryOnReceipt(Receipt $receipt)
     {
         $serialNumber = $this->getSerialNumber();
         // $receipt->project->account_id

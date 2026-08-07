@@ -10,6 +10,7 @@ class AccountHead extends Model
 
     const CASH_ID = 1;
     const SALE_ID = 2;
+    const EXPENSE_ID = 7;
 
     public function journalEntries()
     {
