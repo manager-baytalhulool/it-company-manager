@@ -22,8 +22,8 @@ class Receipt extends Model
     public function scopeSearch(Builder $query, string|null $searchTerm): void
     {
         if (empty($searchTerm)) return;
-
-        $query->join('projects', 'receipts.project_id', '=', 'projects.id')
+        $query->select('receipts.*')
+            ->join('projects', 'receipts.project_id', '=', 'projects.id')
             ->join('accounts', 'projects.account_id', '=', 'accounts.id')
             ->where(function ($q) use ($searchTerm) {
                 $q->where('receipts.description', 'like', "%{$searchTerm}%")
