@@ -28,7 +28,7 @@ class ProjectController extends Controller
     {
 
         if ($request->for == 'select') {
-            $projects = Project::select(['id', 'name'])->get();
+            $projects = Project::select(['id', 'name', 'currency_id'])->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Projects fetched successfully',

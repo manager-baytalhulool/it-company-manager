@@ -26,7 +26,7 @@ class AccountController extends Controller
     public function index(Request $request)
     {
         if ($request->for == 'select') {
-            $accounts = Account::select(['id', 'name'])->get();
+            $accounts = Account::select(['id', 'name', 'currency_id'])->with('currency:id,code')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Accounts fetched successfully',

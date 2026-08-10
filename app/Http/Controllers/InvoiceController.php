@@ -15,7 +15,7 @@ class InvoiceController extends Controller
     public function index(Request $request)
     {
         if ($request->for == 'select') {
-            $invoices = Invoice::select(['id', 'id as name'])->get();
+            $invoices = Invoice::select(['id', 'id as name', 'currency_id', 'project_id'])->with('currency:id,code')->get();
             return response()->json([
                 'success' => true,
                 'message' => 'Invoices fetched successfully',
@@ -83,7 +83,6 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $data = $request->validate([
-            'currency_id' => 'required',
             'project_id' => 'required',
             'date' => 'required',
             'due_date' => 'required',
